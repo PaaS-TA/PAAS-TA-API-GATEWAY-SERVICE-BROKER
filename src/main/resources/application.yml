@@ -1,0 +1,65 @@
+server:
+  port: SERVER-PORT
+
+spring:
+  application:
+    name: SPRING-APPLICATION-NAME
+  datasource:
+    url: jdbc:mysql://SPRING-DATASOURCE-URL-HOST:SPRING-DATASOURCE-URL-PORT/SPRING-DATASOURCE-DATABASE?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+    username: SPRING-DATASOURCE-USERNAME
+    password: SPRING-DATASOURCE-PASSWORD
+  jpa:
+    hibernate:
+      ddl-auto: JPA-HIBERNATE-DDL-AUTO
+      database: JPA-HIBERNATE-DATABASE
+      show-sql: JPA-HIBERNATE-SHOW-SQL
+
+logging:
+  path: LOG-PATH
+  file: LOG-FILE
+  level:
+    root: LOGGING-LEVEL-ROOT
+    org.paasta.servicebroker.apigateway: LOGGING-LEVEL-SERVICEBROKER-APIGATEWAY
+    org.hibernate: LOGGING-LEVEL-HIBERNATE
+
+dashboard:
+  url: DASHBOARD-URL
+
+services:
+#  id: SERVICES-ID
+#  name: SERVICES-NAME
+#  description: SERVICES-DESCRIPTION
+#  bindable: SERVICES-BINDABLE
+#  tags:
+#    -
+#      SERVICES-TAGS
+#  metadata:
+#    displayName: SERVICES-METADATA-DISPLAYNAME
+#    imageUrl: SERVICES-METADATA-IMAGEURL
+#    longDescription: SERVICES-METADATA-LONGDESCRIPTION
+#    providerDisplayName: SERVICES-METADATA-PROVIDERDISPLAYNAME
+#    documentationUrl: SERVICES-METADATA-DOCUMENTATIONURL
+#    supportUrl: SERVICES-METADATA-SUPPORTURL
+#  requires:
+#    -
+#      SERVICES-REQUIRES
+#  planupdatable: SERVICES-PLANUPDATABLE
+#  plans:
+#    -
+#      id: SERVICES-PLANS-ID
+#      name: SERVICES-PLANS-NAME
+#      description: SERVICES-PLANS-DESCRIPTION
+#      metadata:
+#        bullets:
+#          -
+#            SERVICES-PLANS-METADATA-BULLETS
+#        costs:
+#          amount:
+#            usd: SERVICES-PLANS-METADATA-COSTS-AMOUNT
+#            krw: SERVICES-PLANS-METADATA-COSTS-AMOUNT
+#          unit: SERVICES-PLANS-METADATA-COSTS-UNIT
+#      free: SERVICES-PLANS-FREE
+#  dashboardClient:
+#    id: SERVICES-DASHBOARDCLIENT-ID
+#    secret: SERVICES-DASHBOARDCLIENT-SECRET
+#    redirectUri: SERVICES-DASHBOARDCLIENT-REDIRECTURI
