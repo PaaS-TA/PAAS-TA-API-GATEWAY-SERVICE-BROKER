@@ -24,7 +24,7 @@
     </appender>
 
     <logger name="org.openpaas.servicebroker" level="INFO"/>
-    <logger name="org.paasta.servicebroker.apigateway" level="INFO"/>
+    <logger name="org.paasta.servicebroker" level="INFO"/>
     <logger name="org.hibernate.tool.hbm2ddl" level="DEBUG" />
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />
