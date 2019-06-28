@@ -2,19 +2,13 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%F]%M\(%L\) --- [%thread] %logger{35} : %msg %n</Pattern>
-        </encoder>
-    </appender>
-
     <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
             <fileNamePattern>${LOG_PATH}/apiGatewayBroker.%d{yyyyMMdd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- or whenever the file size reaches 10MB -->
-                <maxFileSize>10MB</maxFileSize>
+                <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
@@ -25,12 +19,11 @@
 
     <logger name="org.openpaas.servicebroker" level="INFO"/>
     <logger name="org.paasta.servicebroker" level="INFO"/>
-    <logger name="org.hibernate.tool.hbm2ddl" level="DEBUG" />
+    <logger name="org.hibernate.tool.hbm2ddl" level="INFO" />
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="dailyRollingFileAppender"/>
-        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
