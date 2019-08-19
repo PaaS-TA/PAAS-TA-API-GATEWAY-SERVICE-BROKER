@@ -1,7 +1,7 @@
 buildscript {
     ext {
         gradleVersion = '4.9'
-        springBootVersion = '1.5.2.RELEASE'
+        springBootVersion = '1.5.10.RELEASE'
     }
     repositories {
         flatDir {
@@ -45,6 +45,8 @@ repositories {
 dependencies {
 
     compile files("libs/openpaas-service-java-broker.jar")
+    compile files("libs/PAAS-TA-BOSH-API.jar")
+
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-security"

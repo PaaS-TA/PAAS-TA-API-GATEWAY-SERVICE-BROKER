@@ -5,7 +5,7 @@ spring:
   application:
     name: SPRING-APPLICATION-NAME
   datasource:
-    url: jdbc:mysql://SPRING-DATASOURCE-URL-HOST:SPRING-DATASOURCE-URL-PORT/SPRING-DATASOURCE-DATABASE?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://SPRING-DATASOURCE-URL-HOST:SPRING-DATASOURCE-URL-PORT/SPRING-DATASOURCE-DATABASE?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8
     username: SPRING-DATASOURCE-USERNAME
     password: SPRING-DATASOURCE-PASSWORD
   jpa:
@@ -22,10 +22,10 @@ logging:
     org.paasta.servicebroker.apigateway: LOGGING-LEVEL-SERVICEBROKER-APIGATEWAY
     org.hibernate: LOGGING-LEVEL-HIBERNATE
 
-dashboard:
-  url: DASHBOARD-URL
+#dashboard:
+#  url: DASHBOARD-URL
 
-services:
+#services:
 #  id: SERVICES-ID
 #  name: SERVICES-NAME
 #  description: SERVICES-DESCRIPTION

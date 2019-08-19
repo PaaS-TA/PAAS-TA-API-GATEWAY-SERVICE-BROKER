@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /**
  * The type Application.
  */
-@SpringBootApplication(scanBasePackages = {"org.openpaas.servicebroker", "org.paasta.servicebroker"})
+@SpringBootApplication(scanBasePackages = {"org.openpaas.servicebroker", "org.paasta.servicebroker", "org.openpaas.paasta.bosh"})
 @EnableJpaRepositories("org.paasta.servicebroker.apigateway.repository")
 @EntityScan(value = "org.paasta.servicebroker.apigateway.model")
 public class ApiGatewayBroker {

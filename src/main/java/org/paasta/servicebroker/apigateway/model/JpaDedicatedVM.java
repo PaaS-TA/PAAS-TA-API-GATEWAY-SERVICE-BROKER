@@ -4,11 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * The type Jpa Dedicated VM.
@@ -22,17 +26,25 @@ import javax.persistence.Table;
 public class JpaDedicatedVM {
 
     @Id
+    @Column(name = "vm_ip")
+    private String ip;
+    @NotNull
+    @Column(name = "vm_name")
+    private String vmName;
+    @NotNull
     @Column(name = "vm_id")
     private String vmId;
-    @Column(name = "ip", nullable = false)
-    private String ip;
-    @Column(name = "assignment", nullable = false)
-    private String assignment;
+    @NotNull
+    @Column(name = "assignment")
+    private int assignment;
     @Column(name = "dashboard_url")
     private String dashboardUrl;
     @Column(name = "provisioned_service_instance_id")
-    private String provisionedServiceInstance_id;
+    private String provisionedServiceInstanceId;
+    @UpdateTimestamp
     @Column(name = "provisioned_time")
-    private String provisionedTime;
-
+    private Date provisionedTime;
+    @CreationTimestamp
+    @Column(name = "created_time")
+    private Date createdTime;
 }

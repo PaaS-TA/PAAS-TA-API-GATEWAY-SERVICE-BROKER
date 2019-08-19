@@ -8,6 +8,7 @@ import org.openpaas.servicebroker.model.DeleteServiceInstanceRequest;
 import org.openpaas.servicebroker.model.ServiceInstance;
 import org.openpaas.servicebroker.model.UpdateServiceInstanceRequest;
 import org.openpaas.servicebroker.service.ServiceInstanceService;
+import org.paasta.servicebroker.apigateway.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,6 @@ class ApiGatewayServiceInstanceService implements ServiceInstanceService {
 
     @Autowired
     private final ApiGatewayCommonService apiGatewayCommonService;
-
-    /**
-     * The Dashboard url.
-     */
-    @Value("${dashboard.url}")
-    String dashboardURL;
 
     /**
      * Instantiates a new Api gateway service instance service.
@@ -56,16 +51,15 @@ class ApiGatewayServiceInstanceService implements ServiceInstanceService {
         // 조직 Guid Check (방침 : space 구분 없이 조직별 1개만 생성)
         ServiceInstance serviceInstanceOrg = apiGatewayCommonService.findByOrgGuid(request.getOrganizationGuid());
         if (serviceInstanceOrg != null) {
-            log.error("ServiceInstance already exists in your organization: OrgGuid : {}, spaceId : {}", request.getOrganizationGuid(), serviceInstance.getSpaceGuid());
+            log.error("ServiceInstance already exists in your organization: OrgGuid : {}, spaceId : {}", request.getOrganizationGuid(), serviceInstanceOrg.getSpaceGuid());
             throw new ServiceBrokerException("ServiceInstance already exists in your organization.");
         }
 
-        //TODO
         // [ Dedicated Service 할당 ]=================================================================================================
-
+        String service_url = apiGatewayCommonService.serviceAssignment(request.getServiceInstanceId());
 
         // 서비스 인스턴스 정보 저장
-        serviceInstance = new ServiceInstance(request).withDashboardUrl(dashboardURL);
+        serviceInstance = new ServiceInstance(request).withDashboardUrl(service_url);
         apiGatewayCommonService.createServiceInstance(serviceInstance);
 
         return serviceInstance;
@@ -77,7 +71,7 @@ class ApiGatewayServiceInstanceService implements ServiceInstanceService {
     }
 
     @Override
-    public ServiceInstance deleteServiceInstance(DeleteServiceInstanceRequest request) {
+    public ServiceInstance deleteServiceInstance(DeleteServiceInstanceRequest request) throws ServiceException {
 
         log.debug("ApiGatewayServiceInstanceService : Deprovision (Delete) deleteServiceInstance");
 
@@ -88,7 +82,6 @@ class ApiGatewayServiceInstanceService implements ServiceInstanceService {
             return null;
         }
 
-        //TODO
         // Deprovisioning 처리
         apiGatewayCommonService.procDeProvisioning(request.getServiceInstanceId());
 

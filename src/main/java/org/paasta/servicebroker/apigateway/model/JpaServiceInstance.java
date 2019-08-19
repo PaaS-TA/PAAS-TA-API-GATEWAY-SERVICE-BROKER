@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -23,15 +24,20 @@ public class JpaServiceInstance {
     @Id
     @Column(name = "service_instance_id")
     private String serviceInstanceId;
-    @Column(name = "service_id", nullable = false)
+    @NotNull
+    @Column(name = "service_id")
     private String serviceId;
-    @Column(name = "plan_id", nullable = false)
+    @NotNull
+    @Column(name = "plan_id")
     private String planId;
-    @Column(name = "organization_guid", nullable = false)
+    @NotNull
+    @Column(name = "organization_guid")
     private String organizationGuid;
-    @Column(name = "space_guid", nullable = false)
+    @NotNull
+    @Column(name = "space_guid")
     private String spaceGuid;
-    @Column(name = "dashboard_url", nullable = false)
+    @NotNull
+    @Column(name = "dashboard_url")
     private String dashboardUrl;
     @CreationTimestamp
     @Column(name = "created_time")
