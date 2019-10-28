@@ -22,8 +22,17 @@ logging:
     org.paasta.servicebroker.apigateway: LOGGING-LEVEL-SERVICEBROKER-APIGATEWAY
     org.hibernate: LOGGING-LEVEL-HIBERNATE
 
-#dashboard:
-#  url: DASHBOARD-URL
+service:
+  admin: SERVICE_SUPER_ADMIN_ID
+  admin_password: SERVICE_SUPER_ADMIN_PASSWORD
+  service_admin: SERVICE_ADMIN_USER_ID
+
+bosh:
+  client_id: BOSH-CLIENT-ID
+  client_secret: BOSH-CLIENT-SECRET
+  url: BOSH-URL
+  oauth_url: BOSH-OAUTH-URL
+  deployment_name: BOSH-DEPLOYMENT-NAME
 
 #services:
 #  id: SERVICES-ID

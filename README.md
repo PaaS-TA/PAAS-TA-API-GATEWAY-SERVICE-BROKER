@@ -13,12 +13,11 @@ API Gateway 서비스 브로커가 수행하는 API Gateway 서비스 관리 작
 
 - JDK 8
 - Gradle 4.9
-- Spring Boot 1.5.2
+- Spring Boot 1.5.10
 - CF Service Broker 2.4.0
-- Hibernate Validator 5.1.0
-- Lombok 1.18.2
-- Json Path 2.2.0
+- Lombok 1.18.8
 - Jacoco 0.8.4
+- Gson 2.8.6
 
 # API Gateway 서비스 브로커 API 가이드 
 

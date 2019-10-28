@@ -1,6 +1,7 @@
 package org.paasta.servicebroker.apigateway.service.impl;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
@@ -10,7 +11,8 @@ import java.util.Map;
 /**
  * The type Api gateway catalog property service.
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(prefix = "services")
 public class ApiGatewayCatalogPropertyService {
 
@@ -28,7 +30,8 @@ public class ApiGatewayCatalogPropertyService {
     /**
      * The type Plan.
      */
-    @Data
+    @Getter
+    @Setter
     public static class Plan {
         private String id;
         private String name;
@@ -40,7 +43,8 @@ public class ApiGatewayCatalogPropertyService {
     /**
      * The type Plan meta data.
      */
-    @Data
+    @Getter
+    @Setter
     public static class PlanMetaData {
 
         private List<String> bullets;
@@ -50,7 +54,8 @@ public class ApiGatewayCatalogPropertyService {
     /**
      * The type Cost.
      */
-    @Data
+    @Getter
+    @Setter
     public static class Cost {
         private Map<String, Object> amount;
         private String unit;
@@ -59,7 +64,8 @@ public class ApiGatewayCatalogPropertyService {
     /**
      * The type Dashboard client.
      */
-    @Data
+    @Getter
+    @Setter
     public static class DashboardClient {
         private String id = null;
         private String secret = null;

@@ -22,12 +22,9 @@ apply plugin: 'org.springframework.boot'
 sourceCompatibility = 1.8
 
 ext {
-    springBootCfServiceBrokerVersion = "2.4.0"
-    version = '2.4'
-    hibernateValidatorVersion = '5.1.0.Final'
-    jsonPathVersion = '2.2.0'
     lombokVersion = '1.18.8'
     jacocoVersion = '0.8.4'
+    gsonVersion = '2.8.6'
 }
 
 jar {
@@ -58,10 +55,16 @@ dependencies {
     runtime "mysql:mysql-connector-java"
     compile "org.springframework:spring-jdbc:4.0.0.M3"
     compile "org.apache.commons:commons-lang3:3.0"
+    compile "org.apache.httpcomponents:httpclient:4.5.10"
+    compile "com.google.code.gson:gson:${gsonVersion}"
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = "${gradleVersion}"
+}
+
+configurations.all {
+    exclude module: 'logback-classic'
 }
 
 apply plugin: 'jacoco'

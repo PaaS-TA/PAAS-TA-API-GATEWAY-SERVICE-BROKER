@@ -19,8 +19,7 @@ import java.util.*;
 @EnableConfigurationProperties(ApiGatewayCatalogPropertyService.class)
 public class CatalogConfig {
 
-    private final
-    ApiGatewayCatalogPropertyService apiGatewayCatalogPropertyService;
+    private final ApiGatewayCatalogPropertyService apiGatewayCatalogPropertyService;
 
 
     /**
