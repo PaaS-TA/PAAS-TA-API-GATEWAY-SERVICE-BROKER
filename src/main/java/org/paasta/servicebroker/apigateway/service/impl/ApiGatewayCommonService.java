@@ -116,7 +116,7 @@ public class ApiGatewayCommonService {
      */
     public String serviceAssignment(CreateServiceInstanceRequest request) throws ServiceException {
         String serviceInstanceId = request.getServiceInstanceId();
-        String password = (String)request.getParameters().get(Constants.PARAMETERS_KEY_PASSWORD);
+        String password = (String)request.getParameters().get(Constants.PARAMETERS_KEY);
         JpaDedicatedVM jpaDedicatedVM = jpaDedicatedVMRepository.findDistinctFirstByAssignmentEquals(Constants.STATUS_WATING_FOR_ASSIGNMENT);
 
         if (jpaDedicatedVM != null) {
@@ -193,7 +193,7 @@ public class ApiGatewayCommonService {
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Failed to recreate dedecated VM ::" + e);
             throw new ServiceException("Failed to recreate dedecated VM :: " + e.getMessage());
         }
 
@@ -240,7 +240,7 @@ public class ApiGatewayCommonService {
             log.info("retrieve Admin group data :: group id :: {}", groupId);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to retrieve Admin group data ::" + e);
             throw new ServiceException("Failed to retrieve Admin group data > URL [ "+ reqUrl +"] "+ e.getMessage());
         }
 
@@ -270,7 +270,7 @@ public class ApiGatewayCommonService {
             userId = (String) response.get("id");
             log.info("create service admin :: user id :: {}", userId);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to create service admin ::" + e);
             throw new ServiceException("Failed to create service admin > URL [ "+ reqUrl +"] "+ e.getMessage());
         }
 
@@ -308,7 +308,7 @@ public class ApiGatewayCommonService {
             ResponseEntity<String> response = restTemplate.exchange(reqUrl, HttpMethod.PATCH, entity, String.class);
             log.info("register admin group :: user id :: {} :: group id :: {} :: response :: {} ", userId, groupId, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to register admin group ::" + e);
 
             // error 발생 시 생성했던 사용자 정보 삭제
             deleteUser(url, userId);
@@ -329,7 +329,7 @@ public class ApiGatewayCommonService {
             ResponseEntity<String> response = restTemplate.exchange(reqUrl, HttpMethod.DELETE, entity, String.class);
             log.info("delete user :: user id :: {} :: response :: {}", userId, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Failed to delete service admin ::" + e);
             throw new ServiceException("Failed to delete service admin > URL [ "+ reqUrl +"] "+ e.getMessage());
         }
     }
@@ -353,10 +353,10 @@ public class ApiGatewayCommonService {
             restTemplate = new RestTemplate(requestFactory);
 
         } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            log.error("The Operation Failed :: ignoreSslRestTemplate ::" + e);
             throw new ServiceException("The Operation Failed :: ignoreSslRestTemplate - GeneralSecurityException  :: " + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("The Operation Failed :: ignoreSslRestTemplate ::" + e);
             throw new ServiceException("The Operation Failed :: ignoreSslRestTemplate - Exception  :: " + e.getMessage());
         }
 

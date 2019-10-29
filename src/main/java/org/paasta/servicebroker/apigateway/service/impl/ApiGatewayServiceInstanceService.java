@@ -43,15 +43,15 @@ public class ApiGatewayServiceInstanceService implements ServiceInstanceService 
 
         // [ 유효성 체크 ]=================================================================================================
         // 파라미터 필수 입력 체크 (비밀번호)
-        if (request.getParameters() == null || request.getParameters().isEmpty() || !request.getParameters().containsKey(Constants.PARAMETERS_KEY_PASSWORD)) {
-            throw new ServiceBrokerException("Required [" + Constants.PARAMETERS_KEY_PASSWORD + "] parameter.");
+        if (request.getParameters() == null || request.getParameters().isEmpty() || !request.getParameters().containsKey(Constants.PARAMETERS_KEY)) {
+            throw new ServiceBrokerException("Required [" + Constants.PARAMETERS_KEY + "] parameter.");
         }
 
         // 비밀번호 유효성 체크 패턴 :: 영문 대문자 + 영문 소문자 + 숫자 또는 특수문자($@!%*#?&)
         Pattern patternPassword = Pattern.compile("^((?=.*[A-Z])(?=.*[a-z])(?=.*\\d)|(?=.*[A-Z])(?=.*[a-z])(?=.*[$@!%*#?&]))[A-Za-z\\d$@!%*#?&]{6,30}$");
 
         // 사용자 암호 :: 파라미터 입력값 유효성 체크
-        Matcher matcher = patternPassword.matcher((String) request.getParameters().get(Constants.PARAMETERS_KEY_PASSWORD));
+        Matcher matcher = patternPassword.matcher((String) request.getParameters().get(Constants.PARAMETERS_KEY));
         if (!matcher.matches()) {
             throw new ServiceBrokerException("password does not meet the requirements.[use letters(mix uppercase and lowercase letters) and numbers(or special characters($@!%*#?&), use 6-30 characters.]");
         }

@@ -13,8 +13,8 @@ public class Constants {
     public static final int STATUS_ASSIGNED = 2;
     /** The constant JOB_STATE_RECREATE. */
     public static final String JOB_STATE_RECREATE = "recreate";
-    /** The constant PARAMETERS_KEY_PASSWORD. */
-    public static final String PARAMETERS_KEY_PASSWORD = "password";
+    /** The constant PARAMETERS_KEY. */
+    public static final String PARAMETERS_KEY = "password";
     /** The constant SCIM2_USERS API URL. */
     public static final String SCIM2_USERS = ":9443/scim2/Users";
     /** The constant SCIM2_GROUPS API URL. */
