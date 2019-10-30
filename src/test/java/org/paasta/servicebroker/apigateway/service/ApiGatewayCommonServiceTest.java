@@ -1,5 +1,7 @@
 package org.paasta.servicebroker.apigateway.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +18,17 @@ import org.paasta.servicebroker.apigateway.model.RequestFixture;
 import org.paasta.servicebroker.apigateway.repository.JpaDedicatedVMRepository;
 import org.paasta.servicebroker.apigateway.repository.JpaServiceInstanceRepository;
 import org.paasta.servicebroker.apigateway.service.impl.ApiGatewayCommonService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.is;
@@ -48,11 +55,14 @@ public class ApiGatewayCommonServiceTest {
     JpaDedicatedVMRepository jpaDedicatedVMRepository;
     @Mock
     BoshDirector boshDirector;
+    @Mock
+    RestTemplate restTemplate;
 
     JpaServiceInstance jpaServiceInstance;
     JpaDedicatedVM jpaDedicatedVM;
     ServiceInstance serviceInstance;
     CreateServiceInstanceRequest createServiceInstanceRequest;
+    HttpHeaders headers;
 
 
     /**
@@ -64,6 +74,9 @@ public class ApiGatewayCommonServiceTest {
     public void setUp() throws Exception {
 
         ReflectionTestUtils.setField(apiGatewayCommonService, "deploymentName", TestConstants.DEPLOYMENT_NAME);
+        ReflectionTestUtils.setField(apiGatewayCommonService, "serviceAdmin", TestConstants.SERVICE_ADMIN);
+        ReflectionTestUtils.setField(apiGatewayCommonService, "admin", TestConstants.ADMIN);
+        ReflectionTestUtils.setField(apiGatewayCommonService, "adminPassword", TestConstants.ADMIN_PASSWORD);
         createServiceInstanceRequest = RequestFixture.getCreateServiceInstanceRequest();
         Map vaildParam = new HashMap<>();
         vaildParam.put(TestConstants.PARAMETERS_KEY, TestConstants.VAILD_PARAMETER_VALUE);
@@ -72,6 +85,13 @@ public class ApiGatewayCommonServiceTest {
         jpaServiceInstance = JpaRepositoryFixture.getJpaServiceInstance();
         jpaDedicatedVM = JpaRepositoryFixture.getJpaDedicatedVM();
         serviceInstance = RequestFixture.getServiceInstance();
+
+        String basicAuth = "Basic " + (Base64.getEncoder().encodeToString((TestConstants.ADMIN + ":" + TestConstants.ADMIN_PASSWORD).getBytes()));
+        headers = new HttpHeaders();
+        headers.set("Authorization", basicAuth);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
     }
 
     /**
@@ -135,6 +155,11 @@ public class ApiGatewayCommonServiceTest {
         assertThat(result, is(nullValue()));
     }
 
+    /**
+     * Service assignment test verify assign vm is null.
+     *
+     * @throws ServiceException the service exception
+     */
     @Test
     public void serviceAssignmentTest_VerifyAssignVMIsNull() throws ServiceException {
 
@@ -232,6 +257,91 @@ public class ApiGatewayCommonServiceTest {
         assertThatThrownBy(() -> apiGatewayCommonService.deprovisionVM(TestConstants.SV_INSTANCE_ID))
                 .isInstanceOf(ServiceException.class).hasMessageContaining("Cannot deprovision");
     }
+
+    @Test
+    public void getGroupsTest_VerifyReturn() throws UnsupportedEncodingException {
+        String reqUrl = "https://"+ TestConstants.DEDICATED_VM_IP + TestConstants.SCIM2_GROUPS+"?filter=displayName+eq+PRIMARY/admin";
+        HttpEntity<Object> entity = new HttpEntity<>(headers);
+
+        when(restTemplate.exchange(URLDecoder.decode(reqUrl, "UTF-8"), HttpMethod.GET, entity, Map.class)).thenThrow(Exception.class);
+
+        assertThatThrownBy(() -> apiGatewayCommonService.getGroups(TestConstants.DEDICATED_VM_IP))
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to retrieve Admin group data");
+
+    }
+
+    /**
+     * Create user test verify return.
+     */
+    @Test
+    public void createUserTest_VerifyReturn() {
+        String reqUrl = "https://"+ TestConstants.DEDICATED_VM_IP + TestConstants.SCIM2_USERS;
+        Gson gson = new Gson();
+        JsonObject user =  new JsonObject();
+        user.addProperty("userName", TestConstants.SERVICE_ADMIN);
+        user.addProperty("password", TestConstants.VAILD_PARAMETER_VALUE);
+        String param = gson.toJson(user);
+        HttpEntity<Object> entity = new HttpEntity<>(param, headers);
+
+        when(restTemplate.exchange(reqUrl, HttpMethod.POST, entity, Map.class)).thenThrow(Exception.class);
+
+        assertThatThrownBy(() -> apiGatewayCommonService.createUser(TestConstants.DEDICATED_VM_IP, TestConstants.VAILD_PARAMETER_VALUE))
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to create service admin");
+
+    }
+
+    /**
+     * Rest common headers test verify param.
+     */
+    @Test
+    public void restCommonHeadersTest_VerifyParam() {
+
+        String param = "{\"userName\":\""+TestConstants.SERVICE_ADMIN+"\",\"password\":\""+TestConstants.VAILD_PARAMETER_VALUE+"\"}";
+        HttpEntity<Object> expected = new HttpEntity<>(param, headers);
+
+        HttpEntity<Object> result = apiGatewayCommonService.restCommonHeaders(param);
+
+        assertThat(result, is(expected));
+
+    }
+
+    /**
+     * Rest common headers test verify param is null.
+     */
+    public void restCommonHeadersTest_VerifyParamIsNull() {
+
+        HttpEntity<Object> expected = new HttpEntity<>(headers);
+
+        HttpEntity<Object> result = apiGatewayCommonService.restCommonHeaders(null);
+
+        assertThat(result, is(expected));
+
+    }
+
+    /**
+     * Configure reg admin param test.
+     */
+    @Test
+    public void configureRegAdminParamTest() {
+
+        String param = "{\"Operations\":[{\"op\":\"add\",\"value\":{\"members\":[{\"display\":\""+TestConstants.SERVICE_ADMIN+"\",\"value\":\""+TestConstants.USER_GUID+"\"}]}}]}";
+
+        String result = apiGatewayCommonService.configureRegAdminParam(TestConstants.USER_GUID);
+        assertThat(result, is(param));
+    }
+
+    /**
+     * Configure create user param test.
+     */
+    @Test
+    public void configureCreateUserParamTest() {
+
+        String param = "{\"userName\":\""+TestConstants.SERVICE_ADMIN+"\",\"password\":\""+TestConstants.VAILD_PARAMETER_VALUE+"\"}";
+
+        String result = apiGatewayCommonService.configureCreateUserParam(TestConstants.VAILD_PARAMETER_VALUE);
+        assertThat(result, is(param));
+    }
+
 
     /**
      * Jpa dedicated vm test.

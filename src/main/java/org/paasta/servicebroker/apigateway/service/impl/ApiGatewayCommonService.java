@@ -209,7 +209,14 @@ public class ApiGatewayCommonService {
     }
 
     // [ Use WSO2 API ]=================================================================================================
-    private String getGroups(String url) throws ServiceException {
+    /**
+     * Gets groups.
+     *
+     * @param url the url
+     * @return the groups
+     * @throws ServiceException the service exception
+     */
+    public String getGroups(String url) throws ServiceException {
 
         // Admin Group 정보 조회
         // https://<VM_IP>:9443/scim2/Groups?filter=displayName+eq+PRIMARY/admin
@@ -229,19 +236,20 @@ public class ApiGatewayCommonService {
 
     }
 
-    private String createUser(String url, String password) throws ServiceException {
+    /**
+     * Create user string.
+     *
+     * @param url      the url
+     * @param password the password
+     * @return the string
+     * @throws ServiceException the service exception
+     */
+    public  String createUser(String url, String password) throws ServiceException {
 
         // 사용자 생성
         // https://<VM_IP>:9443/scim2/Users
         String reqUrl = "https://"+ url + Constants.SCIM2_USERS;
-
-        Gson gson = new Gson();
-        JsonObject user =  new JsonObject();
-        user.addProperty("userName", serviceAdmin);
-        user.addProperty("password", password);
-
-        String param = gson.toJson(user);
-        HttpEntity<Object> entity = restCommonHeaders(param);
+        HttpEntity<Object> entity = restCommonHeaders(configureCreateUserParam(password));
 
         try {
             Map response = restTemplate.exchange(reqUrl, HttpMethod.POST, entity, Map.class).getBody();
@@ -253,10 +261,82 @@ public class ApiGatewayCommonService {
         }
     }
 
-    private void regAdmin(String url, String groupId, String userId) throws ServiceException {
+    /**
+     * Reg admin.
+     *
+     * @param url     the url
+     * @param groupId the group id
+     * @param userId  the user id
+     * @throws ServiceException the service exception
+     */
+    public void regAdmin(String url, String groupId, String userId) throws ServiceException {
         // 사용자 (service admin) admin 권한 부여
         // https://<VM_IP>:9443/scim2/Groups/<ADMIN_GROUP_ID>
         String reqUrl = "https://"+ url + Constants.SCIM2_GROUPS + "/" + groupId;
+
+        HttpEntity<Object> entity = restCommonHeaders(configureRegAdminParam(userId));
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(reqUrl, HttpMethod.PATCH, entity, String.class);
+            log.info("register admin group :: user id :: {} :: group id :: {} :: response :: {} ", userId, groupId, response);
+        } catch (Exception e) {
+            log.error("Failed to register admin group ::" + e);
+            // error 발생 시 생성했던 사용자 정보 삭제
+            deleteUser(url, userId);
+            throw new ServiceException("Failed to register admin group > URL [ "+ reqUrl +"] "+ e.getMessage());
+        }
+
+    }
+
+    /**
+     * Delete user.
+     *
+     * @param url    the url
+     * @param userId the user id
+     * @throws ServiceException the service exception
+     */
+    public void deleteUser(String url, String userId) throws ServiceException {
+
+        // 사용자 삭제
+        // https://<VM_IP>:9443/scim2/Users/<USER_ID>
+        String reqUrl = "https://"+ url + Constants.SCIM2_USERS + "/" + userId;
+        HttpEntity<Object> entity = restCommonHeaders(null);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(reqUrl, HttpMethod.DELETE, entity, String.class);
+            log.info("delete user :: user id :: {} :: response :: {}", userId, response);
+        } catch (Exception e) {
+            log.error("Failed to delete service admin ::" + e);
+            throw new ServiceException("Failed to delete service admin > URL [ "+ reqUrl +"] "+ e.getMessage());
+        }
+    }
+
+    /**
+     * Rest common headers http entity.
+     *
+     * @param param the param
+     * @return the http entity
+     */
+    public HttpEntity<Object> restCommonHeaders(Object param) {
+
+        String basicAuth = "Basic " + (Base64.getEncoder().encodeToString((admin + ":" + adminPassword).getBytes()));
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", basicAuth);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Object> entity = param == null ? new HttpEntity<>(headers): new HttpEntity<>(param, headers);
+
+        return entity;
+    }
+
+    /**
+     * Configure reg admin param string.
+     *
+     * @param userId the user id
+     * @return the string
+     */
+    public String configureRegAdminParam(String userId) {
 
         Gson gson = new Gson();
         JsonObject operations =  new JsonObject();
@@ -277,47 +357,24 @@ public class ApiGatewayCommonService {
         operations.add("Operations", jsonArray);
 
         String param = gson.toJson(operations);
-        HttpEntity<Object> entity = restCommonHeaders(param);
 
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(reqUrl, HttpMethod.PATCH, entity, String.class);
-            log.info("register admin group :: user id :: {} :: group id :: {} :: response :: {} ", userId, groupId, response);
-        } catch (Exception e) {
-            log.error("Failed to register admin group ::" + e);
-
-            // error 발생 시 생성했던 사용자 정보 삭제
-            deleteUser(url, userId);
-            throw new ServiceException("Failed to register admin group > URL [ "+ reqUrl +"] "+ e.getMessage());
-        }
+        return param;
 
     }
 
-    private void deleteUser(String url, String userId) throws ServiceException {
+    /**
+     * Configure create user param string.
+     *
+     * @param password the password
+     * @return the string
+     */
+    public String configureCreateUserParam(String password) {
+        Gson gson = new Gson();
+        JsonObject user =  new JsonObject();
+        user.addProperty("userName", serviceAdmin);
+        user.addProperty("password", password);
 
-        // 사용자 삭제
-        // https://<VM_IP>:9443/scim2/Users/<USER_ID>
-        String reqUrl = "https://"+ url + Constants.SCIM2_USERS + "/" + userId;
-        HttpEntity<Object> entity = restCommonHeaders(null);
-
-        try {
-            ResponseEntity<String> response = restTemplate.exchange(reqUrl, HttpMethod.DELETE, entity, String.class);
-            log.info("delete user :: user id :: {} :: response :: {}", userId, response);
-        } catch (Exception e) {
-            log.error("Failed to delete service admin ::" + e);
-            throw new ServiceException("Failed to delete service admin > URL [ "+ reqUrl +"] "+ e.getMessage());
-        }
-    }
-
-    private HttpEntity<Object> restCommonHeaders(Object param) {
-
-        String basicAuth = "Basic " + (Base64.getEncoder().encodeToString((admin + ":" + adminPassword).getBytes()));
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", basicAuth);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-
-        HttpEntity<Object> entity = param == null ? new HttpEntity<>(headers): new HttpEntity<>(param, headers);
-
-        return entity;
+        String param = gson.toJson(user);
+        return param;
     }
 }
