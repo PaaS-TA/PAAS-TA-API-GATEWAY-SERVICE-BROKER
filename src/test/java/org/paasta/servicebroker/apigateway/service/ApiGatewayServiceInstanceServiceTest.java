@@ -131,8 +131,29 @@ public class ApiGatewayServiceInstanceServiceTest {
 
     }
 
-    //----------------[ getServiceInstance Test]
+    @Test
+    public void createServiceInstanceTest_VerifyReturn() throws ServiceBrokerException, ServiceInstanceExistsException {
 
+        Map vaildParam = new HashMap<>();
+        vaildParam.put(TestConstants.PARAMETERS_KEY, VAILD_PARAM_PASSWORD);
+        createServiceInstanceRequest.setParameters(vaildParam);
+
+        when(apiGatewayCommonService.getServiceInstance(anyString())).thenReturn(null);
+        when(apiGatewayCommonService.findByOrgGuid(anyString())).thenReturn(null);
+        when(apiGatewayCommonService.serviceAssignment(createServiceInstanceRequest)).thenReturn(TestConstants.DASHBOARD_URL);
+        doNothing().when(apiGatewayCommonService).createServiceInstance(serviceInstance);
+
+        ServiceInstance result = apiGatewayServiceInstanceService.createServiceInstance(createServiceInstanceRequest);
+
+        assertThat(result.getServiceInstanceId(), is(serviceInstance.getServiceInstanceId()));
+        assertThat(result.getServiceDefinitionId(), is(serviceInstance.getServiceDefinitionId()));
+        assertThat(result.getOrganizationGuid(), is(serviceInstance.getOrganizationGuid()));
+        assertThat(result.getPlanId(), is(serviceInstance.getPlanId()));
+        assertThat(result.getSpaceGuid(), is(serviceInstance.getSpaceGuid()));
+        assertThat(result.getDashboardUrl(), is(TestConstants.DASHBOARD_URL));
+    }
+
+    //----------------[ getServiceInstance Test]
     /**
      * Gets service instance valid return.
      */
