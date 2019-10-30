@@ -45,8 +45,6 @@ public class ApiGatewayServiceInstanceServiceTest {
     CreateServiceInstanceRequest createServiceInstanceRequest;
     DeleteServiceInstanceRequest deleteServiceInstanceRequest;
 
-    String VAILD_PARAM_PASSWORD = "Test12";
-
     /**
      * Sets up.
      *
@@ -102,7 +100,7 @@ public class ApiGatewayServiceInstanceServiceTest {
 
         // 서비스 인스턴스 Guid Check
         Map vaildParam = new HashMap<>();
-        vaildParam.put(TestConstants.PARAMETERS_KEY, VAILD_PARAM_PASSWORD);
+        vaildParam.put(TestConstants.PARAMETERS_KEY, TestConstants.VAILD_PARAMETER_VALUE);
         createServiceInstanceRequest.setParameters(vaildParam);
 
         when(apiGatewayCommonService.getServiceInstance(anyString())).thenReturn(serviceInstance);
@@ -120,7 +118,7 @@ public class ApiGatewayServiceInstanceServiceTest {
 
         // Org Guid Check (Org 당 1개)
         Map vaildParam = new HashMap<>();
-        vaildParam.put(TestConstants.PARAMETERS_KEY, VAILD_PARAM_PASSWORD);
+        vaildParam.put(TestConstants.PARAMETERS_KEY, TestConstants.VAILD_PARAMETER_VALUE);
         createServiceInstanceRequest.setParameters(vaildParam);
 
         when(apiGatewayCommonService.getServiceInstance(anyString())).thenReturn(null);
@@ -131,11 +129,17 @@ public class ApiGatewayServiceInstanceServiceTest {
 
     }
 
+    /**
+     * Create service instance test verify return.
+     *
+     * @throws ServiceBrokerException         the service broker exception
+     * @throws ServiceInstanceExistsException the service instance exists exception
+     */
     @Test
     public void createServiceInstanceTest_VerifyReturn() throws ServiceBrokerException, ServiceInstanceExistsException {
 
         Map vaildParam = new HashMap<>();
-        vaildParam.put(TestConstants.PARAMETERS_KEY, VAILD_PARAM_PASSWORD);
+        vaildParam.put(TestConstants.PARAMETERS_KEY, TestConstants.VAILD_PARAMETER_VALUE);
         createServiceInstanceRequest.setParameters(vaildParam);
 
         when(apiGatewayCommonService.getServiceInstance(anyString())).thenReturn(null);
@@ -154,6 +158,7 @@ public class ApiGatewayServiceInstanceServiceTest {
     }
 
     //----------------[ getServiceInstance Test]
+
     /**
      * Gets service instance valid return.
      */
@@ -211,6 +216,8 @@ public class ApiGatewayServiceInstanceServiceTest {
         assertThat(result, is(serviceInstance));
 
     }
+
+    //----------------[ updateServiceInstance Test]
 
     /**
      * Update service instance valid return.

@@ -90,18 +90,18 @@ public class ApiGatewayCommonService {
      * @return the service instance
      */
     public ServiceInstance findByOrgGuid(String orgGuid) {
-        JpaServiceInstance jpaServiceInstanceOrg = jpaServiceInstanceRepository.findDistinctFirstByOrganizationGuid(orgGuid);
+        JpaServiceInstance jpaServiceInstance = jpaServiceInstanceRepository.findDistinctFirstByOrganizationGuid(orgGuid);
 
         ServiceInstance serviceInstance = null;
 
-        if ( jpaServiceInstanceOrg != null ) {
+        if ( jpaServiceInstance != null ) {
             serviceInstance = new ServiceInstance(
                     new CreateServiceInstanceRequest(
-                            jpaServiceInstanceOrg.getServiceId(),
-                            jpaServiceInstanceOrg.getPlanId(),
-                            jpaServiceInstanceOrg.getOrganizationGuid(),
-                            jpaServiceInstanceOrg.getSpaceGuid()
-                    ).withServiceInstanceId(jpaServiceInstanceOrg.getServiceInstanceId()));
+                            jpaServiceInstance.getServiceId(),
+                            jpaServiceInstance.getPlanId(),
+                            jpaServiceInstance.getOrganizationGuid(),
+                            jpaServiceInstance.getSpaceGuid()
+                    ).withServiceInstanceId(jpaServiceInstance.getServiceInstanceId()));
         }
 
         return serviceInstance;
