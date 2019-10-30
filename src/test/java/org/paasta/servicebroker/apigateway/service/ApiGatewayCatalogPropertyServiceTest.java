@@ -1,6 +1,5 @@
 package org.paasta.servicebroker.apigateway.service;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 
@@ -42,14 +40,14 @@ public class ApiGatewayCatalogPropertyServiceTest {
     @Test
     public void catalogPropertyTest() throws Exception {
 
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "id", Constants.SERVICES_ID);
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "name", Constants.SERVICES_NAME);
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "description", Constants.SERVICES_DESCRIPTION);
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "bindable", Constants.SERVICES_BINDABLE);
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "tags", Constants.SERVICES_TAGS);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "id", TestConstants.SERVICES_ID);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "name", TestConstants.SERVICES_NAME);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "description", TestConstants.SERVICES_DESCRIPTION);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "bindable", TestConstants.SERVICES_BINDABLE);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "tags", TestConstants.SERVICES_TAGS);
         ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "metadata", ServiceDefinitionFixture.getMetadata());
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "requires", Constants.SERVICES_REQUIRES);
-        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "planUpdatable", Constants.SERVICES_PLAN_UPDATABLE);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "requires", TestConstants.SERVICES_REQUIRES);
+        ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "planUpdatable", TestConstants.SERVICES_PLAN_UPDATABLE);
         ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "plans", ServiceDefinitionFixture.getPlans());
         ReflectionTestUtils.setField (apiGatewayCatalogPropertyService, "dashboardClient", ServiceDefinitionFixture.getDashboardClient());
 
@@ -74,7 +72,9 @@ public class ApiGatewayCatalogPropertyServiceTest {
         assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getId(),is(ServiceDefinitionFixture.getPlans().get(0).getId()));
         assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getName(),is(ServiceDefinitionFixture.getPlans().get(0).getName()));
         assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getDescription(),is(ServiceDefinitionFixture.getPlans().get(0).getDescription()));
-        assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getMetadata(),is(ServiceDefinitionFixture.getPlans().get(0).getMetadata()));
+        assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getMetadata().getBullets(),is(ServiceDefinitionFixture.getPlans().get(0).getMetadata().getBullets()));
+        assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getMetadata().getCosts().getAmount(),is(ServiceDefinitionFixture.getPlans().get(0).getMetadata().getCosts().getAmount()));
+        assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).getMetadata().getCosts().getUnit(),is(ServiceDefinitionFixture.getPlans().get(0).getMetadata().getCosts().getUnit()));
         assertThat(apiGatewayCatalogPropertyService.getPlans().get(0).isFree(),is(ServiceDefinitionFixture.getPlans().get(0).isFree()));
         // getDashboardClient()
         assertThat(apiGatewayCatalogPropertyService.getDashboardClient().getId(),is(ServiceDefinitionFixture.getDashboardClient().getId()));

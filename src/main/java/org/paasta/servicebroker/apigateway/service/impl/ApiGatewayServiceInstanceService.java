@@ -67,7 +67,7 @@ public class ApiGatewayServiceInstanceService implements ServiceInstanceService 
         // 조직 Guid Check (방침 : space 구분 없이 조직별 1개만 생성)
         ServiceInstance serviceInstanceOrg = apiGatewayCommonService.findByOrgGuid(request.getOrganizationGuid());
         if (serviceInstanceOrg != null) {
-            log.error("ServiceInstance already exists in your organization: OrgGuid : {}, spaceId : {}", request.getOrganizationGuid(), serviceInstanceOrg.getSpaceGuid());
+            log.error("ServiceInstance already exists in your organization: OrgGuid : {}, spaceId : {}", serviceInstanceOrg.getOrganizationGuid(), serviceInstanceOrg.getSpaceGuid());
             throw new ServiceBrokerException("ServiceInstance already exists in your organization.");
         }
 

@@ -5,9 +5,9 @@ import java.util.List;
 
 
 /**
- * The type Constants.
+ * The type TestConstants.
  */
-public class Constants {
+public class TestConstants {
 
     public static final String SERVICES_ID = "TEST_SERVICES_ID";
     public static final String SERVICES_NAME = "TEST_SERVICES_NAME";
@@ -26,6 +26,8 @@ public class Constants {
     public static final String SERVICES_PLANS_NAME = "TEST_SERVICES_PLANS_NAME";
     public static final String SERVICES_PLANS_DESCRIPTION = "TEST_SERVICES_PLANS_DESCRIPTION";
     public static final boolean SERVICES_PLANS_FREE = true;
+
+    public static final String PARAMETERS_KEY = "password";
 
     public static final String ORG_GUID = "test_org_guid";
     public static final String SPACE_GUID = "test_space_guid";

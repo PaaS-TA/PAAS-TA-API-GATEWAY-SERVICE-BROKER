@@ -1,6 +1,5 @@
 package org.paasta.servicebroker.apigateway.service;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +61,7 @@ public class ApiGatewayCatalogServiceTest {
      */
     @Test
     public void getServiceDefinitionTest() {
-        serviceDefinition = apiGatewayCatalogService.getServiceDefinition(Constants.SERVICES_ID);
+        serviceDefinition = apiGatewayCatalogService.getServiceDefinition(TestConstants.SERVICES_ID);
 
         assertThat(serviceDefinition.getId(), is(ServiceDefinitionFixture.getService().getId()));
         assertThat(serviceDefinition.getName(), is(ServiceDefinitionFixture.getService().getName()));

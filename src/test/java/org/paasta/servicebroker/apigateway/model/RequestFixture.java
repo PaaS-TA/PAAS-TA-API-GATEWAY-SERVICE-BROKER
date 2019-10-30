@@ -1,7 +1,7 @@
 package org.paasta.servicebroker.apigateway.model;
 
 import org.openpaas.servicebroker.model.*;
-import org.paasta.servicebroker.apigateway.service.Constants;
+import org.paasta.servicebroker.apigateway.service.TestConstants;
 
 /**
  * The type Request fixture.
@@ -20,10 +20,10 @@ public class RequestFixture {
         return new CreateServiceInstanceRequest(
                 service.getId(),
                 service.getPlans().get(0).getId(),
-                Constants.ORG_GUID,
-                Constants.SPACE_GUID,
+                TestConstants.ORG_GUID,
+                TestConstants.SPACE_GUID,
                 null
-        );
+        ).withServiceInstanceId(TestConstants.SV_INSTANCE_ID);
     }
 
     /**
@@ -36,7 +36,7 @@ public class RequestFixture {
         return new CreateServiceInstanceBindingRequest(
                 service.getId(),
                 service.getPlans().get(0).getId(),
-                Constants.APP_GUID);
+                TestConstants.APP_GUID);
     }
 
     /**
@@ -78,7 +78,7 @@ public class RequestFixture {
         ServiceInstance service = getServiceInstance();
 
         return new DeleteServiceInstanceBindingRequest(
-                Constants.BIND_GUID,
+                TestConstants.BIND_GUID,
                 getServiceInstance(),
                 service.getServiceDefinitionId(),
                 service.getPlanId());
@@ -91,8 +91,8 @@ public class RequestFixture {
      */
     public static ServiceInstance getServiceInstance() {
         ServiceInstance serviceInstance = new ServiceInstance(
-                getCreateServiceInstanceRequest().withServiceInstanceId(Constants.SV_INSTANCE_ID))
-                .withDashboardUrl(Constants.DASHBOARD_URL);
+                getCreateServiceInstanceRequest().withServiceInstanceId(TestConstants.SV_INSTANCE_ID))
+                .withDashboardUrl(TestConstants.DASHBOARD_URL);
 
         return serviceInstance;
 

@@ -2,7 +2,7 @@ package org.paasta.servicebroker.apigateway.model;
 
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.ServiceInstance;
-import org.paasta.servicebroker.apigateway.service.Constants;
+import org.paasta.servicebroker.apigateway.service.TestConstants;
 
 import java.util.Date;
 
@@ -11,6 +11,11 @@ import java.util.Date;
  */
 public class JpaRepositoryFixture {
 
+    /**
+     * Gets jpa service instance.
+     *
+     * @return the jpa service instance
+     */
     public static JpaServiceInstance getJpaServiceInstance() {
 
         CreateServiceInstanceRequest createServiceInstanceRequest = RequestFixture.getCreateServiceInstanceRequest();
@@ -30,6 +35,11 @@ public class JpaRepositoryFixture {
 
     }
 
+    /**
+     * Gets jpa dedicated vm.
+     *
+     * @return the jpa dedicated vm
+     */
     public static JpaDedicatedVM getJpaDedicatedVM() {
         CreateServiceInstanceRequest createServiceInstanceRequest = RequestFixture.getCreateServiceInstanceRequest();
 
@@ -38,8 +48,8 @@ public class JpaRepositoryFixture {
                 .vmName("TEST_VM_NAME")
                 .vmId("TEST_VM_ID")
                 .assignment(0)
-                .dashboardUrl(Constants.DASHBOARD_URL)
-                .provisionedServiceInstanceId(Constants.SV_INSTANCE_ID)
+                .dashboardUrl(TestConstants.DASHBOARD_URL)
+                .provisionedServiceInstanceId(TestConstants.SV_INSTANCE_ID)
                 .provisionedTime(new Date())
                 .createdTime(new Date())
                 .build();

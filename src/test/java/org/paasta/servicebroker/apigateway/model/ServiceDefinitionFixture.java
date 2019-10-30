@@ -2,7 +2,7 @@ package org.paasta.servicebroker.apigateway.model;
 
 import org.openpaas.servicebroker.model.Plan;
 import org.openpaas.servicebroker.model.ServiceDefinition;
-import org.paasta.servicebroker.apigateway.service.Constants;
+import org.paasta.servicebroker.apigateway.service.TestConstants;
 import org.paasta.servicebroker.apigateway.service.impl.ApiGatewayCatalogPropertyService;
 
 import java.util.*;
@@ -20,19 +20,19 @@ public class ServiceDefinitionFixture {
     public static ServiceDefinition getService() {
 
         return new ServiceDefinition(
-                Constants.SERVICES_ID,
-                Constants.SERVICES_NAME,
-                Constants.SERVICES_DESCRIPTION,
-                Constants.SERVICES_BINDABLE,
-                Constants.SERVICES_PLAN_UPDATABLE,
+                TestConstants.SERVICES_ID,
+                TestConstants.SERVICES_NAME,
+                TestConstants.SERVICES_DESCRIPTION,
+                TestConstants.SERVICES_BINDABLE,
+                TestConstants.SERVICES_PLAN_UPDATABLE,
                 Arrays.asList(
-                        new Plan(Constants.SERVICES_PLANS_ID,
-                                Constants.SERVICES_PLANS_NAME,
-                                Constants.SERVICES_PLANS_DESCRIPTION,
+                        new Plan(TestConstants.SERVICES_PLANS_ID,
+                                TestConstants.SERVICES_PLANS_NAME,
+                                TestConstants.SERVICES_PLANS_DESCRIPTION,
                                 null)),
-                Constants.SERVICES_TAGS,
+                TestConstants.SERVICES_TAGS,
                 getMetadata(),
-                Constants.SERVICES_REQUIRES,
+                TestConstants.SERVICES_REQUIRES,
                 null);
     }
 
@@ -44,12 +44,12 @@ public class ServiceDefinitionFixture {
     public static Map<String, Object> getMetadata() {
         // Service Metadata
         Map<String, Object> metadata = new HashMap<String, Object>();
-        metadata.put("displayName", Constants.SERVICES_METADATA_DISPLAYNAME);
-        metadata.put("imageUrl", Constants.SERVICES_METADATA_IMAGEURL);
-        metadata.put("longDescription", Constants.SERVICES_METADATA_LONGDESCRIPTION);
-        metadata.put("providerDisplayName", Constants.SERVICES_METADATA_PROVIDERDISPLAYNAME);
-        metadata.put("documentationUrl", Constants.SERVICES_METADATA_DOCUMENTATIONURL);
-        metadata.put("supportUrl", Constants.SERVICES_METADATA_SUPPORTURL);
+        metadata.put("displayName", TestConstants.SERVICES_METADATA_DISPLAYNAME);
+        metadata.put("imageUrl", TestConstants.SERVICES_METADATA_IMAGEURL);
+        metadata.put("longDescription", TestConstants.SERVICES_METADATA_LONGDESCRIPTION);
+        metadata.put("providerDisplayName", TestConstants.SERVICES_METADATA_PROVIDERDISPLAYNAME);
+        metadata.put("documentationUrl", TestConstants.SERVICES_METADATA_DOCUMENTATIONURL);
+        metadata.put("supportUrl", TestConstants.SERVICES_METADATA_SUPPORTURL);
         return metadata;
     }
 
@@ -73,11 +73,11 @@ public class ServiceDefinitionFixture {
     public static List<ApiGatewayCatalogPropertyService.Plan> getPlans() {
         ApiGatewayCatalogPropertyService.Plan plan = new ApiGatewayCatalogPropertyService.Plan();
 
-        plan.setId(Constants.SERVICES_PLANS_ID);
-        plan.setName(Constants.SERVICES_PLANS_NAME);
-        plan.setDescription(Constants.SERVICES_PLANS_DESCRIPTION);
-        plan.setMetadata(null);
-        plan.setFree(Constants.SERVICES_PLANS_FREE);
+        plan.setId(TestConstants.SERVICES_PLANS_ID);
+        plan.setName(TestConstants.SERVICES_PLANS_NAME);
+        plan.setDescription(TestConstants.SERVICES_PLANS_DESCRIPTION);
+        plan.setMetadata(getPlanMetaData());
+        plan.setFree(TestConstants.SERVICES_PLANS_FREE);
 
 
         List<ApiGatewayCatalogPropertyService.Plan> plans = Arrays.asList(plan);
@@ -126,9 +126,9 @@ public class ServiceDefinitionFixture {
     public static ApiGatewayCatalogPropertyService.DashboardClient getDashboardClient() {
         ApiGatewayCatalogPropertyService.DashboardClient dashboardClient = new ApiGatewayCatalogPropertyService.DashboardClient();
 
-        dashboardClient.setId(Constants.DASHBOARDCLIENT_ID);
-        dashboardClient.setSecret(Constants.DASHBOARDCLIENT_SECRET);
-        dashboardClient.setRedirectUri(Constants.DASHBOARDCLIENT_REDIRECTURI);
+        dashboardClient.setId(TestConstants.DASHBOARDCLIENT_ID);
+        dashboardClient.setSecret(TestConstants.DASHBOARDCLIENT_SECRET);
+        dashboardClient.setRedirectUri(TestConstants.DASHBOARDCLIENT_REDIRECTURI);
 
         return dashboardClient;
 
