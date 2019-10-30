@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openpaas.paasta.bosh.director.BoshDirector;
-import org.openpaas.servicebroker.exception.ServiceBrokerException;
 import org.openpaas.servicebroker.model.CreateServiceInstanceRequest;
 import org.openpaas.servicebroker.model.ServiceInstance;
+import org.paasta.servicebroker.apigateway.exception.ServiceException;
 import org.paasta.servicebroker.apigateway.model.JpaDedicatedVM;
 import org.paasta.servicebroker.apigateway.model.JpaRepositoryFixture;
 import org.paasta.servicebroker.apigateway.model.JpaServiceInstance;
@@ -17,6 +17,7 @@ import org.paasta.servicebroker.apigateway.repository.JpaDedicatedVMRepository;
 import org.paasta.servicebroker.apigateway.repository.JpaServiceInstanceRepository;
 import org.paasta.servicebroker.apigateway.service.impl.ApiGatewayCommonService;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +61,7 @@ public class ApiGatewayCommonServiceTest {
     @Before
     public void setUp() throws Exception {
 
+        ReflectionTestUtils.setField(apiGatewayCommonService, "deploymentName", TestConstants.DEPLOYMENT_NAME);
         createServiceInstanceRequest = RequestFixture.getCreateServiceInstanceRequest();
         Map vaildParam = new HashMap<>();
         vaildParam.put(TestConstants.PARAMETERS_KEY, TestConstants.VAILD_PARAMETER_VALUE);
@@ -130,6 +132,14 @@ public class ApiGatewayCommonServiceTest {
         assertThat(result, is(nullValue()));
     }
 
+    @Test
+    public void serviceAssignmentTest_VerifyAssignVMIsNull() throws ServiceException {
+
+        when(jpaDedicatedVMRepository.findDistinctFirstByAssignmentEquals(TestConstants.STATUS_WATING_FOR_ASSIGNMENT)).thenReturn(null);
+        assertThatThrownBy(() -> apiGatewayCommonService.serviceAssignment(createServiceInstanceRequest))
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Cannot assign VM");
+    }
+
     /**
      * Create service instance test.
      */
@@ -151,7 +161,7 @@ public class ApiGatewayCommonServiceTest {
 
         doNothing().when(jpaServiceInstanceRepository).delete(anyString());
         when(jpaDedicatedVMRepository.findDistinctFirstByProvisionedServiceInstanceId(anyString())).thenReturn(jpaDedicatedVM);
-        when(boshDirector.updateInstanceState(TestConstants.DEPLOYMENT_NAME, jpaDedicatedVM.getVmName(), jpaDedicatedVM.getVmId(), TestConstants.JOB_STATE_RECREATE)).thenReturn(false);
+        when(boshDirector.updateInstanceState(TestConstants.DEPLOYMENT_NAME, jpaDedicatedVM.getVmName(), jpaDedicatedVM.getVmId(), TestConstants.JOB_STATE_RECREATE)).thenReturn(true);
 
         apiGatewayCommonService.procDeProvisioning(TestConstants.SV_INSTANCE_ID);
     }
@@ -169,7 +179,7 @@ public class ApiGatewayCommonServiceTest {
         when(boshDirector.updateInstanceState(TestConstants.DEPLOYMENT_NAME, jpaDedicatedVM.getVmName(), jpaDedicatedVM.getVmId(), TestConstants.JOB_STATE_RECREATE)).thenReturn(false);
 
         assertThatThrownBy(() -> apiGatewayCommonService.procDeProvisioning(TestConstants.SV_INSTANCE_ID))
-                .isInstanceOf(ServiceBrokerException.class).hasMessageContaining("Failed to recreate dedecated VM");
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to recreate dedecated VM");
     }
 
     /**
@@ -185,7 +195,7 @@ public class ApiGatewayCommonServiceTest {
         when(boshDirector.updateInstanceState(TestConstants.DEPLOYMENT_NAME, jpaDedicatedVM.getVmName(), jpaDedicatedVM.getVmId(), TestConstants.JOB_STATE_RECREATE)).thenThrow(Exception.class);
 
         assertThatThrownBy(() -> apiGatewayCommonService.procDeProvisioning(TestConstants.SV_INSTANCE_ID))
-                .isInstanceOf(ServiceBrokerException.class).hasMessageContaining("Failed to recreate dedecated VM");
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to recreate dedecated VM");
     }
 
     /**
@@ -216,10 +226,8 @@ public class ApiGatewayCommonServiceTest {
 
         when(jpaDedicatedVMRepository.findDistinctFirstByProvisionedServiceInstanceId(anyString())).thenReturn(null);
 
-        JpaDedicatedVM result = apiGatewayCommonService.deprovisionVM(TestConstants.SV_INSTANCE_ID);
-
         assertThatThrownBy(() -> apiGatewayCommonService.deprovisionVM(TestConstants.SV_INSTANCE_ID))
-                .isInstanceOf(ServiceBrokerException.class).hasMessageContaining("Cannot deprovision");
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Cannot deprovision");
     }
 
 }

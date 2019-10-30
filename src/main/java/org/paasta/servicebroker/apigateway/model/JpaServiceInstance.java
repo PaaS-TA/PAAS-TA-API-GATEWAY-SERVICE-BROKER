@@ -1,9 +1,7 @@
 package org.paasta.servicebroker.apigateway.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -16,7 +14,8 @@ import java.util.Date;
 /**
  * The type Jpa service instance.
  */
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

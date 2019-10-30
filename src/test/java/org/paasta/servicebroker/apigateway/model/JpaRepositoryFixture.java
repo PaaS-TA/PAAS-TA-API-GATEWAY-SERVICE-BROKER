@@ -19,18 +19,13 @@ public class JpaRepositoryFixture {
 
         ServiceInstance serviceInstance = RequestFixture.getServiceInstance();
 
-        JpaServiceInstance jpaServiceInstance = new JpaServiceInstance();
-
-        new JpaServiceInstance(serviceInstance.getServiceInstanceId(),
+        return new JpaServiceInstance(serviceInstance.getServiceInstanceId(),
                 serviceInstance.getServiceDefinitionId(),
                 serviceInstance.getPlanId(),
                 serviceInstance.getOrganizationGuid(),
                 serviceInstance.getSpaceGuid(),
                 serviceInstance.getDashboardUrl(),
                 new Date());
-
-        return jpaServiceInstance;
-
     }
 
     /**
