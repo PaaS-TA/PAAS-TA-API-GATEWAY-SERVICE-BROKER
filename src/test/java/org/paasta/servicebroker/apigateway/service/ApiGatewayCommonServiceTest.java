@@ -19,11 +19,13 @@ import org.paasta.servicebroker.apigateway.service.impl.ApiGatewayCommonService;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -93,6 +95,7 @@ public class ApiGatewayCommonServiceTest {
     /**
      * Gets service instance test verify return is null.
      */
+    @Test
     public void getServiceInstanceTest_VerifyReturnIsNull() {
 
         when(jpaServiceInstanceRepository.findOne(anyString())).thenReturn(null);
@@ -228,6 +231,51 @@ public class ApiGatewayCommonServiceTest {
 
         assertThatThrownBy(() -> apiGatewayCommonService.deprovisionVM(TestConstants.SV_INSTANCE_ID))
                 .isInstanceOf(ServiceException.class).hasMessageContaining("Cannot deprovision");
+    }
+
+    @Test
+    public void jpaDedicatedVMTest() {
+
+        JpaDedicatedVM jpaDedicatedVMTest = new JpaDedicatedVM();
+
+        jpaDedicatedVMTest.setIp(TestConstants.DEDICATED_VM_IP);
+        jpaDedicatedVMTest.setVmName(TestConstants.DEDICATED_VM_NAME);
+        jpaDedicatedVMTest.setVmId(TestConstants.DEDICATED_VM_ID);
+        jpaDedicatedVMTest.setAssignment(TestConstants.STATUS_WATING_FOR_ASSIGNMENT);
+        jpaDedicatedVMTest.setDashboardUrl(TestConstants.DASHBOARD_URL);
+        jpaDedicatedVMTest.setProvisionedServiceInstanceId(TestConstants.SV_INSTANCE_ID);
+        jpaDedicatedVMTest.setProvisionedTime(new Date());
+        jpaDedicatedVMTest.setCreatedTime(new Date());
+
+        assertThat(jpaDedicatedVMTest.getIp(), is(TestConstants.DEDICATED_VM_IP));
+        assertThat(jpaDedicatedVMTest.getVmName(), is(TestConstants.DEDICATED_VM_NAME));
+        assertThat(jpaDedicatedVMTest.getVmId(), is(TestConstants.DEDICATED_VM_ID));
+        assertThat(jpaDedicatedVMTest.getAssignment(), is(TestConstants.STATUS_WATING_FOR_ASSIGNMENT));
+        assertThat(jpaDedicatedVMTest.getDashboardUrl(), is(TestConstants.DASHBOARD_URL));
+        assertThat(jpaDedicatedVMTest.getProvisionedServiceInstanceId(), is(TestConstants.SV_INSTANCE_ID));
+        assertThat(jpaDedicatedVMTest.getProvisionedTime(), is(notNullValue()));
+        assertThat(jpaDedicatedVMTest.getCreatedTime(), is(notNullValue()));
+    }
+
+    @Test
+    public void jpaServiceInstanceTest() {
+
+        JpaServiceInstance jpaServiceInstanceTest = new JpaServiceInstance();
+        jpaServiceInstanceTest.setServiceInstanceId(serviceInstance.getServiceInstanceId());
+        jpaServiceInstanceTest.setServiceId(serviceInstance.getServiceDefinitionId());
+        jpaServiceInstanceTest.setPlanId(serviceInstance.getPlanId());
+        jpaServiceInstanceTest.setOrganizationGuid(serviceInstance.getOrganizationGuid());
+        jpaServiceInstanceTest.setSpaceGuid(serviceInstance.getSpaceGuid());
+        jpaServiceInstanceTest.setDashboardUrl(serviceInstance.getDashboardUrl());
+        jpaServiceInstanceTest.setCreatedTime(new Date());
+
+        assertThat(jpaServiceInstanceTest.getServiceInstanceId(), is(serviceInstance.getServiceInstanceId()));
+        assertThat(jpaServiceInstanceTest.getServiceId(), is(serviceInstance.getServiceDefinitionId()));
+        assertThat(jpaServiceInstanceTest.getPlanId(), is(serviceInstance.getPlanId()));
+        assertThat(jpaServiceInstanceTest.getOrganizationGuid(), is(serviceInstance.getOrganizationGuid()));
+        assertThat(jpaServiceInstanceTest.getSpaceGuid(), is(serviceInstance.getSpaceGuid()));
+        assertThat(jpaServiceInstanceTest.getDashboardUrl(), is(serviceInstance.getDashboardUrl()));
+        assertThat(jpaServiceInstanceTest.getCreatedTime(), is(notNullValue()));
     }
 
 }
