@@ -233,6 +233,9 @@ public class ApiGatewayCommonServiceTest {
                 .isInstanceOf(ServiceException.class).hasMessageContaining("Cannot deprovision");
     }
 
+    /**
+     * Jpa dedicated vm test.
+     */
     @Test
     public void jpaDedicatedVMTest() {
 
@@ -257,6 +260,9 @@ public class ApiGatewayCommonServiceTest {
         assertThat(jpaDedicatedVMTest.getCreatedTime(), is(notNullValue()));
     }
 
+    /**
+     * Jpa service instance test.
+     */
     @Test
     public void jpaServiceInstanceTest() {
 
