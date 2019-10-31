@@ -43,6 +43,14 @@ public class ApiGatewayBroker {
         SpringApplication.run(ApiGatewayBroker.class, args);
     }
 
+    /**
+     * Rest template rest template.
+     *
+     * @return the rest template
+     * @throws KeyStoreException        the key store exception
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     * @throws KeyManagementException   the key management exception
+     */
     @Bean
     RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         TrustStrategy trustStrategy = (cert, authType) -> true;
