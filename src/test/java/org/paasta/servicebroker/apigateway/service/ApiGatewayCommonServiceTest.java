@@ -258,6 +258,11 @@ public class ApiGatewayCommonServiceTest {
                 .isInstanceOf(ServiceException.class).hasMessageContaining("Cannot deprovision");
     }
 
+    /**
+     * Gets groups test verify return.
+     *
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     */
     @Test
     public void getGroupsTest_VerifyReturn() throws UnsupportedEncodingException {
         String reqUrl = "https://"+ TestConstants.DEDICATED_VM_IP + TestConstants.SCIM2_GROUPS+"?filter=displayName+eq+PRIMARY/admin";
@@ -267,6 +272,24 @@ public class ApiGatewayCommonServiceTest {
 
         assertThatThrownBy(() -> apiGatewayCommonService.getGroups(TestConstants.DEDICATED_VM_IP))
                 .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to retrieve Admin group data");
+
+    }
+
+    /**
+     * Reg admin verify return.
+     *
+     * @throws UnsupportedEncodingException the unsupported encoding exception
+     */
+    @Test
+    public void regAdmin_VerifyReturn() throws UnsupportedEncodingException {
+        String reqUrl = "https://"+ TestConstants.DEDICATED_VM_IP + TestConstants.SCIM2_GROUPS + "/" + TestConstants.ADMIN_GROUP_GUID;
+        String param = "{\"Operations\":[{\"op\":\"add\",\"value\":{\"members\":[{\"display\":\""+TestConstants.SERVICE_ADMIN+"\",\"value\":\""+TestConstants.USER_GUID+"\"}]}}]}";
+        HttpEntity<Object> entity = new HttpEntity<>(param,headers);
+
+        when(restTemplate.exchange(reqUrl, HttpMethod.PATCH, entity, String.class)).thenThrow(Exception.class);
+
+        assertThatThrownBy(() -> apiGatewayCommonService.regAdmin(TestConstants.DEDICATED_VM_IP, TestConstants.ADMIN_GROUP_GUID, TestConstants.USER_GUID))
+                .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to register admin group");
 
     }
 
@@ -289,59 +312,6 @@ public class ApiGatewayCommonServiceTest {
                 .isInstanceOf(ServiceException.class).hasMessageContaining("Failed to create service admin");
 
     }
-
-    /**
-     * Rest common headers test verify param.
-     */
-    @Test
-    public void restCommonHeadersTest_VerifyParam() {
-
-        String param = "{\"userName\":\""+TestConstants.SERVICE_ADMIN+"\",\"password\":\""+TestConstants.VAILD_PARAMETER_VALUE+"\"}";
-        HttpEntity<Object> expected = new HttpEntity<>(param, headers);
-
-        HttpEntity<Object> result = apiGatewayCommonService.restCommonHeaders(param);
-
-        assertThat(result, is(expected));
-
-    }
-
-    /**
-     * Rest common headers test verify param is null.
-     */
-    public void restCommonHeadersTest_VerifyParamIsNull() {
-
-        HttpEntity<Object> expected = new HttpEntity<>(headers);
-
-        HttpEntity<Object> result = apiGatewayCommonService.restCommonHeaders(null);
-
-        assertThat(result, is(expected));
-
-    }
-
-    /**
-     * Configure reg admin param test.
-     */
-    @Test
-    public void configureRegAdminParamTest() {
-
-        String param = "{\"Operations\":[{\"op\":\"add\",\"value\":{\"members\":[{\"display\":\""+TestConstants.SERVICE_ADMIN+"\",\"value\":\""+TestConstants.USER_GUID+"\"}]}}]}";
-
-        String result = apiGatewayCommonService.configureRegAdminParam(TestConstants.USER_GUID);
-        assertThat(result, is(param));
-    }
-
-    /**
-     * Configure create user param test.
-     */
-    @Test
-    public void configureCreateUserParamTest() {
-
-        String param = "{\"userName\":\""+TestConstants.SERVICE_ADMIN+"\",\"password\":\""+TestConstants.VAILD_PARAMETER_VALUE+"\"}";
-
-        String result = apiGatewayCommonService.configureCreateUserParam(TestConstants.VAILD_PARAMETER_VALUE);
-        assertThat(result, is(param));
-    }
-
 
     /**
      * Jpa dedicated vm test.

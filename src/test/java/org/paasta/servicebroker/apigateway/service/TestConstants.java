@@ -36,10 +36,6 @@ public class TestConstants {
     public static final String APP_GUID = "test_app_guid";
     public static final String BIND_GUID = "test_bind_guid";
     public static final String DASHBOARD_URL = "https://test-dashboard.com";
-    public static final String DEPLOYMENT_NAME = "test_deployment_name";
-    public static final String SERVICE_ADMIN = "serviceadmin";
-    public static final String ADMIN = "admin";
-    public static final String ADMIN_PASSWORD = "admin_password";
 
     public static final String DEDICATED_VM_NAME = "test_dedicated_vm_name";
     public static final String DEDICATED_VM_ID = "test_dedicated_vm_id";
@@ -51,7 +47,12 @@ public class TestConstants {
     public static final String PARAMETERS_KEY = "password";
     public static final String VAILD_PARAMETER_VALUE = "Test12";
 
+    public static final String DEPLOYMENT_NAME = "test_deployment_name";
+    public static final String SERVICE_ADMIN = "serviceadmin";
+    public static final String ADMIN = "admin";
+    public static final String ADMIN_PASSWORD = "admin_password";
     public static final String SCIM2_GROUPS = ":9443/scim2/Groups";
     public static final String SCIM2_USERS = ":9443/scim2/Users";
     public static final String USER_GUID = "test_user_guid";
+    public static final String ADMIN_GROUP_GUID = "test_admin_group_id";
 }
