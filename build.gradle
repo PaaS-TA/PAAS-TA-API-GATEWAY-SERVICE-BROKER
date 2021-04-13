@@ -7,7 +7,7 @@ buildscript {
         flatDir {
             dirs 'libs'
         }
-        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "https://repo.spring.io/plugins-release" }
         mavenCentral()
     }
     dependencies {
@@ -36,7 +36,7 @@ repositories {
         dirs 'libs'
     }
     mavenCentral()
-    maven { url "http://repo.spring.io/plugins-release" }
+    maven { url "https://repo.spring.io/plugins-release" }
 }
 
 dependencies {
@@ -52,16 +52,18 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test"
 
     compile "org.apache.commons:commons-dbcp2"
-    runtime "mysql:mysql-connector-java"
+    runtime("org.mariadb.jdbc:mariadb-java-client:2.2.6")
     compile "org.springframework:spring-jdbc:4.0.0.M3"
+    annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok:1.16.16")
     compile "org.apache.commons:commons-lang3:3.0"
     compile "org.apache.httpcomponents:httpclient:4.5.10"
     compile "com.google.code.gson:gson:${gsonVersion}"
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = "${gradleVersion}"
-}
+//task wrapper(type: Wrapper) {
+//    gradleVersion = "${gradleVersion}"
+//}
 
 configurations.all {
     exclude module: 'logback-classic'
@@ -78,4 +80,8 @@ test {
     jacoco {
         destinationFile = file("$buildDir/jacoco/jacoco-overall.exec")
     }
+}
+
+springBoot {
+    mainClass = "org.paasta.servicebroker.apigateway.config.ApiGatewayBroker"
 }
